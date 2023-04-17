@@ -1,0 +1,100 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "agola.fullname" . }}-gitserver
+  {{- with .Values.gitserver.statefulSet.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  labels:
+    {{- include "agola.labels" . | nindent 4 }}
+    agola.io/component: gitserver
+    {{- with .Values.gitserver.statefulSet.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  serviceName: {{ include "agola.fullname" . }}-gitserver-headless
+  revisionHistoryLimit: {{ .Values.gitserver.statefulSet.revisionHistoryLimit }}
+  replicas: 1
+  updateStrategy:
+    {{- toYaml .Values.gitserver.updateStrategy | nindent 4 }}
+  selector:
+    matchLabels:
+      {{- include "agola.selectorLabels" . | nindent 6 }}
+      agola.io/component: gitserver
+  template:
+    metadata:
+      {{- with .Values.gitserver.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "agola.selectorLabels" . | nindent 8 }}
+        agola.io/component: gitserver
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "agola.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.gitserver.podSecurityContext | nindent 8 }}
+      containers:
+        - name: gitserver
+          securityContext:
+            {{- toYaml .Values.gitserver.securityContext | nindent 12 }}
+          image: "{{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command:
+            - /bin/agola
+            - serve
+            - "--config"
+            - /etc/agola/config.yml
+            - "--components"
+            - gitserver
+          ports:
+            - name: gitserver
+              containerPort: 4003
+              protocol: TCP
+          livenessProbe:
+            tcpSocket:
+              port: 4003
+          resources:
+            {{- toYaml .Values.gitserver.resources | nindent 12 }}
+          volumeMounts:
+          - name: conf
+            mountPath: /etc/agola
+          - name: local
+            mountPath: {{ .Values.config.localBaseDir }}
+      {{- with .Values.gitserver.extraContainers }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.gitserver.initContainers }}
+      initContainers:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.gitserver.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.gitserver.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.gitserver.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.gitserver.dnsConfig }}
+      dnsConfig:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      volumes:
+        - name: conf
+          secret:
+            secretName: {{ include "agola.fullname" . }}-conf
+        - name: local
+          emptyDir: {}
+      {{- with .Values.gitserver.extraVolumes }}
+      {{- toYaml . | nindent 8 }}
+      {{- end }}

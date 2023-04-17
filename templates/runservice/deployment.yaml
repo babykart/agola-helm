@@ -1,0 +1,99 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "agola.fullname" . }}-runservice
+  {{- with .Values.runservice.deployment.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  labels:
+    {{- include "agola.labels" . | nindent 4 }}
+    agola.io/component: runservice
+    {{- with .Values.runservice.deployment.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  revisionHistoryLimit: {{ .Values.runservice.deployment.revisionHistoryLimit }}
+  replicas: {{ .Values.runservice.deployment.replicas }}
+  strategy:
+    {{- toYaml .Values.runservice.updateStrategy | nindent 4 }}
+  selector:
+    matchLabels:
+      {{- include "agola.selectorLabels" . | nindent 6 }}
+      agola.io/component: runservice
+  template:
+    metadata:
+      {{- with .Values.runservice.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "agola.selectorLabels" . | nindent 8 }}
+        agola.io/component: runservice
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "agola.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.runservice.podSecurityContext | nindent 8 }}
+      containers:
+        - name: runservice
+          securityContext:
+            {{- toYaml .Values.runservice.securityContext | nindent 12 }}
+          image: "{{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command:
+            - /bin/agola
+            - serve
+            - "--config"
+            - /etc/agola/config.yml
+            - "--components"
+            - runservice
+          ports:
+            - name: runservice
+              containerPort: 4000
+              protocol: TCP
+          livenessProbe:
+            tcpSocket:
+              port: 4000
+          resources:
+            {{- toYaml .Values.runservice.resources | nindent 12 }}
+          volumeMounts:
+          - name: conf
+            mountPath: /etc/agola
+          - name: local
+            mountPath: {{ .Values.config.localBaseDir }}
+      {{- with .Values.runservice.extraContainers }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.runservice.initContainers }}
+      initContainers:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.runservice.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.runservice.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.runservice.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.runservice.dnsConfig }}
+      dnsConfig:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      volumes:
+        - name: conf
+          secret:
+            secretName: {{ include "agola.fullname" . }}-conf
+        - name: local
+          emptyDir: {}
+      {{- with .Values.runservice.extraVolumes }}
+      {{- toYaml . | nindent 8 }}
+      {{- end }}

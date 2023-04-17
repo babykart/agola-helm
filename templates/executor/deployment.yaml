@@ -1,0 +1,99 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "agola.fullname" . }}-executor
+  {{- with .Values.executor.deployment.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  labels:
+    {{- include "agola.labels" . | nindent 4 }}
+    agola.io/component: executor
+    {{- with .Values.executor.deployment.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  revisionHistoryLimit: {{ .Values.executor.deployment.revisionHistoryLimit }}
+  replicas: {{ .Values.executor.deployment.replicas }}
+  strategy:
+    {{- toYaml .Values.executor.updateStrategy | nindent 4 }}
+  selector:
+    matchLabels:
+      {{- include "agola.selectorLabels" . | nindent 6 }}
+      agola.io/component: executor
+  template:
+    metadata:
+      {{- with .Values.executor.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "agola.selectorLabels" . | nindent 8 }}
+        agola.io/component: executor
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "agola.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.executor.podSecurityContext | nindent 8 }}
+      containers:
+        - name: executor
+          securityContext:
+            {{- toYaml .Values.executor.securityContext | nindent 12 }}
+          image: "{{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command:
+            - /bin/agola
+            - serve
+            - "--config"
+            - /etc/agola/config.yml
+            - "--components"
+            - executor
+          ports:
+            - name: executor
+              containerPort: 4001
+              protocol: TCP
+          livenessProbe:
+            tcpSocket:
+              port: 4001
+          resources:
+            {{- toYaml .Values.executor.resources | nindent 12 }}
+          volumeMounts:
+          - name: conf
+            mountPath: /etc/agola
+          - name: local
+            mountPath: {{ .Values.config.localBaseDir }}
+      {{- with .Values.executor.extraContainers }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.executor.initContainers }}
+      initContainers:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.executor.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.executor.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.executor.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.executor.dnsConfig }}
+      dnsConfig:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      volumes:
+        - name: conf
+          secret:
+            secretName: {{ include "agola.fullname" . }}-conf
+        - name: local
+          emptyDir: {}
+      {{- with .Values.executor.extraVolumes }}
+      {{- toYaml . | nindent 8 }}
+      {{- end }}

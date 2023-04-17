@@ -1,0 +1,28 @@
+{{- if and (.Values.serviceAccount.create) (.Values.serviceAccount.rbac.create) -}}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ include "agola.serviceAccountName" . }}
+  labels:
+    {{- include "agola.labels" . | nindent 4 }}
+    {{- with .Values.serviceAccount.rbac.role.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- with .Values.serviceAccount.rbac.role.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+rules:
+  - apiGroups:
+    - ""
+    - "coordination.k8s.io"
+    resources:
+    - nodes
+    - pods
+    - pods/exec
+    - configmaps
+    - leases
+    - secrets
+    verbs:
+    - "*"
+{{- end }}

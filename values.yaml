@@ -1,0 +1,433 @@
+# Default values for agola.
+
+image:
+  # -- Overrides the image registry
+  registry: docker.io
+  # -- Overrides the image repository
+  repository: sorintlab/agola
+  # -- Overrides the image pull policy
+  pullPolicy: IfNotPresent
+  # -- Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+config:
+  # -- Config annotations
+  annotations: {}
+  # -- Config labels
+  labels: {}
+  # -- Config API Exposed URL
+  apiExposedURL: &apiExposedURL "http://agola.example.net"
+  # -- Config Web Exposed URL
+  webExposedURL: &webExposedURL "http://agola.example.net"
+  # -- Config local base directory
+  localBaseDir: /agola/local
+  # -- Content of the config.yml file that will be stored in a secret
+  file:
+    gateway:
+      apiExposedURL: *apiExposedURL
+      webExposedURL: *webExposedURL
+      runserviceURL: "http://agola-runservice:4000"
+      configstoreURL: "http://agola-configstore:4002"
+      gitserverURL: "http://agola-gitserver:4003"
+      web:
+        listenAddress: ":8000"
+      cookieSigning:
+        key: deadbeefcafeaa
+      unsecureCookies: true
+      tokenSigning:
+        method: hmac
+        key: cafedeadbeefbb
+      adminToken: MyComplexAdminToken
+    scheduler:
+      runserviceURL: "http://agola-runservice:4000"
+    notification:
+      webExposedURL: *webExposedURL
+      runserviceURL: "http://agola-runservice:4000"
+      configstoreURL: "http://agola-configstore:4002"
+      db:
+        type: postgres
+        connString: "postgres://agola:password@postgres:5432/notification?sslmode=disable"
+    configstore:
+      dataDir: /agola/local/configstore
+      db:
+        type: postgres
+        connString: "postgres://agola:password@postgres:5432/configstore?sslmode=disable"
+      objectStorage:
+        type: s3
+        endpoint: "http://minio-service:9000"
+        bucket: configstore
+        location: us-east-1
+        accessKey: minio
+        secretAccessKey: minio123
+      web:
+        listenAddress: ":4002"
+    runservice:
+      debug: false
+      dataDir: /agola/local/runservice
+      db:
+        type: postgres
+        connString: "postgres://agola:password@postgres:5432/runservice?sslmode=disable"
+      objectStorage:
+        type: s3
+        endpoint: "http://minio-service:9000"
+        bucket: runservice
+        location: us-east-1
+        accessKey: minio
+        secretAccessKey: minio123
+      web:
+        listenAddress: ":4000"
+    executor:
+      dataDir: /agola/local/executor
+      toolboxPath: ./bin
+      runserviceURL: "http://agola-runservice:4000"
+      web:
+        listenAddress: ":4001"
+      activeTasksLimit: 2
+      driver:
+        type: kubernetes
+      allowPrivilegedContainers: false
+      initImage:
+        image: "busybox:stable"
+    gitserver:
+      dataDir: /agola/local/gitserver
+      gatewayURL: "http://agola-gateway:8000"
+      web:
+        listenAddress: ":4003"
+
+# -- Defines imagePullSecrets
+imagePullSecrets: []
+# -- Overrides the name of the helm chart
+nameOverride: ""
+# -- Overrides the full name of the helm chart
+fullnameOverride: ""
+
+serviceAccount:
+  # -- Specifies whether a service account should be created
+  create: true
+  # -- Annotations to add to the service account
+  annotations: {}
+  # -- The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+  rbac:
+    # -- Only change this if you have a non CNCF compliant cluster, missing the RBAC endpoints
+    # the Role and RoleBinding are only created if serviceAccount.create is also true
+    create: true
+    # -- additional annotations and labels in role and roleBinding are only needed, if you
+    # are using additional tooling to manage / verify roles or roleBindings (OPA, etc.)
+    role:
+      # -- Annotations for the RBAC role
+      annotations: {}
+      # -- Labels for the RBAC role
+      labels: {}
+    roleBinding:
+      # -- Annotations for the RBAC roleBinding
+      annotations: {}
+      # -- Labels for the RBAC roleBinding
+      labels: {}
+
+gateway:
+  deployment:
+    # -- Gateway Annotations for the deployment
+    annotations: {}
+    # -- Gateway Labels for the deployment
+    labels: {}
+    # -- Gateway number of replicas for the replicaSet
+    replicas: 2
+    # -- The maximum number of revisions that will be maintained in the replicaSet's revision history.
+    # Default is 10.
+    revisionHistoryLimit: 5
+  updateStrategy:
+    # -- The type of the update strategy for the deployment
+    type: RollingUpdate
+  # -- Gateway extra containers.
+  extraContainers: []
+  # -- Gateway initContainers
+  initContainers: []
+  # -- Gateway extra volumes
+  extraVolumes: []
+  # - name: configmap
+  #   configMap:
+  #     name: litestream
+  # -- Gateway Pod annotations
+  podAnnotations: {}
+  # -- Gateway Pod security context
+  podSecurityContext: {}
+    # fsGroup: 2000
+  # -- Gateway Security context
+  securityContext: {}
+    # capabilities:
+    #   drop:
+    #   - ALL
+    # readOnlyRootFilesystem: true
+    # runAsNonRoot: true
+    # runAsUser: 1000
+  service:
+    # -- Gateway type of the service
+    type: ClusterIP
+    # -- The port of the service
+    port: &gwServicePort 8000
+  # -- Gateway Resources
+  resources: {}
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 128Mi
+  # -- Gateway Node selector labels
+  nodeSelector: {}
+  # -- Gateway Tolerations
+  tolerations: []
+  # -- Gateway Affinity
+  affinity: {}
+  # -- Gateway Overrides default DNS config
+  dnsConfig: {}
+
+ingress:
+  # -- Ingress enabled
+  enabled: false
+  # -- Ingress annotations
+  annotations:
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  # -- Defines which ingress controller will implement the resource
+  ingressClassName: ""
+  hosts:
+    - host: agola.example.net
+      paths:
+      - path: /
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+runservice:
+  deployment:
+    # -- Runservice Annotations for the deployment
+    annotations: {}
+    # -- Runservice Labels for the deployment
+    labels: {}
+    # -- Runservice number of replicas for the replicaSet
+    replicas: 2
+    # -- The maximum number of revisions that will be maintained in the replicaSet's revision history.
+    # Default is 10.
+    revisionHistoryLimit: 5
+  updateStrategy:
+    # -- The type of the update strategy for the deployment
+    type: RollingUpdate
+  # -- Runservice extra containers.
+  extraContainers: []
+  # -- Runservice initContainers
+  initContainers: []
+  # -- Runservice extra volumes
+  extraVolumes: []
+  # - name: configmap
+  #   configMap:
+  #     name: litestream
+  # -- Runservice Pod annotations
+  podAnnotations: {}
+  # -- Runservice Pod security context
+  podSecurityContext: {}
+    # fsGroup: 2000
+  # -- Runservice Security context
+  securityContext: {}
+    # capabilities:
+    #   drop:
+    #   - ALL
+    # readOnlyRootFilesystem: true
+    # runAsNonRoot: true
+    # runAsUser: 1000
+  service:
+    # -- Runservice type of the service
+    type: ClusterIP
+    # -- The port of the service
+    port: 4000
+  # -- Runservice Resources
+  resources: {}
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 128Mi
+  # -- Runservice Node selector labels
+  nodeSelector: {}
+  # -- Runservice Tolerations
+  tolerations: []
+  # -- Runservice Affinity
+  affinity: {}
+  # -- Runservice Overrides default DNS config
+  dnsConfig: {}
+
+executor:
+  deployment:
+    # -- Executor Annotations for the deployment
+    annotations: {}
+    # -- Executor Labels for the deployment
+    labels: {}
+    # -- Executor number of replicas for the replicaSet
+    replicas: 2
+    # -- The maximum number of revisions that will be maintained in the replicaSet's revision history.
+    # Default is 10.
+    revisionHistoryLimit: 5
+  updateStrategy:
+    # -- The type of the update strategy for the deployment
+    type: RollingUpdate
+  # -- Executor extra containers.
+  extraContainers: []
+  # -- Executor initContainers
+  initContainers: []
+  # -- Executor extra volumes
+  extraVolumes: []
+  # - name: configmap
+  #   configMap:
+  #     name: litestream
+  # -- Executor Pod annotations
+  podAnnotations: {}
+  # -- Executor Pod security context
+  podSecurityContext: {}
+    # fsGroup: 2000
+  # -- Executor Security context
+  securityContext: {}
+    # capabilities:
+    #   drop:
+    #   - ALL
+    # readOnlyRootFilesystem: true
+    # runAsNonRoot: true
+    # runAsUser: 1000
+  service:
+    # -- Executor type of the service
+    type: ClusterIP
+    # -- The port of the service
+    port: 4001
+  # -- Executor Resources
+  resources: {}
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 128Mi
+  # -- Executor Node selector labels
+  nodeSelector: {}
+  # -- Executor Tolerations
+  tolerations: []
+  # -- Executor Affinity
+  affinity: {}
+  # -- Executor Overrides default DNS config
+  dnsConfig: {}
+
+configstore:
+  deployment:
+    # -- Configstore Annotations for the deployment
+    annotations: {}
+    # -- Configstore Labels for the deployment
+    labels: {}
+    # -- Configstore number of replicas for the replicaSet
+    replicas: 2
+    # -- The maximum number of revisions that will be maintained in the replicaSet's revision history.
+    # Default is 10.
+    revisionHistoryLimit: 5
+  updateStrategy:
+    # -- The type of the update strategy for the deployment
+    type: RollingUpdate
+  # -- Configstore extra containers.
+  extraContainers: []
+  # -- Configstore initContainers
+  initContainers: []
+  # -- Configstore extra volumes
+  extraVolumes: []
+  # - name: configmap
+  #   configMap:
+  #     name: litestream
+  # -- Configstore Pod annotations
+  podAnnotations: {}
+  # -- Configstore Pod security context
+  podSecurityContext: {}
+    # fsGroup: 2000
+  # -- Configstore Security context
+  securityContext: {}
+    # capabilities:
+    #   drop:
+    #   - ALL
+    # readOnlyRootFilesystem: true
+    # runAsNonRoot: true
+    # runAsUser: 1000
+  service:
+    # -- Configstore type of the service
+    type: ClusterIP
+    # -- The port of the service
+    port: 4002
+  # -- Configstore Resources
+  resources: {}
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 128Mi
+  # -- Configstore Node selector labels
+  nodeSelector: {}
+  # -- Configstore Tolerations
+  tolerations: []
+  # -- Configstore Affinity
+  affinity: {}
+  # -- Configstore Overrides default DNS config
+  dnsConfig: {}
+
+gitserver:
+  statefulSet:
+    # -- Gitserver Annotations for the statefulSet
+    annotations: {}
+    # -- Gitserver Labels for the statefulSet
+    labels: {}
+    # -- The maximum number of revisions that will be maintained in the statefulSet's revision history.
+    # Default is 10.
+    revisionHistoryLimit: 5
+  updateStrategy:
+    # -- The type of the update strategy for the statefulSet
+    type: RollingUpdate
+  # -- Gitserver extra containers.
+  extraContainers: []
+  # -- Gitserver initContainers
+  initContainers: []
+  # -- Gitserver extra volumes
+  extraVolumes: []
+  # - name: configmap
+  #   configMap:
+  #     name: litestream
+  # -- Gitserver Pod annotations
+  podAnnotations: {}
+  # -- Gitserver Pod security context
+  podSecurityContext: {}
+    # fsGroup: 2000
+  # -- Gitserver Security context
+  securityContext: {}
+    # capabilities:
+    #   drop:
+    #   - ALL
+    # readOnlyRootFilesystem: true
+    # runAsNonRoot: true
+    # runAsUser: 1000
+  service:
+    # -- Gitserver type of the service
+    type: ClusterIP
+    # -- The port of the service
+    port: 4001
+  # -- Gitserver Resources
+  resources: {}
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 128Mi
+  # -- Gitserver Node selector labels
+  nodeSelector: {}
+  # -- Gitserver Tolerations
+  tolerations: []
+  # -- Gitserver Affinity
+  affinity: {}
+  # -- Gitserver Overrides default DNS config
+  dnsConfig: {}

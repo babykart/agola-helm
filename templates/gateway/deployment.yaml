@@ -1,0 +1,100 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "agola.fullname" . }}-gateway
+  {{- with .Values.gateway.deployment.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  labels:
+    {{- include "agola.labels" . | nindent 4 }}
+    agola.io/component: gateway
+    {{- with .Values.gateway.deployment.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  revisionHistoryLimit: {{ .Values.gateway.deployment.revisionHistoryLimit }}
+  replicas: {{ .Values.gateway.deployment.replicas }}
+  strategy:
+    {{- toYaml .Values.gateway.updateStrategy | nindent 4 }}
+  selector:
+    matchLabels:
+      {{- include "agola.selectorLabels" . | nindent 6 }}
+      agola.io/component: gateway
+  template:
+    metadata:
+      {{- with .Values.gateway.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "agola.selectorLabels" . | nindent 8 }}
+        agola.io/component: gateway
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "agola.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.gateway.podSecurityContext | nindent 8 }}
+      containers:
+        - name: gateway
+          securityContext:
+            {{- toYaml .Values.gateway.securityContext | nindent 12 }}
+          image: "{{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command:
+            - /bin/agola
+            - serve
+            - "--config"
+            - /etc/agola/config.yml
+            - "--components"
+            - gateway,scheduler,notification
+          ports:
+            - name: gateway
+              containerPort: 8000
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8000
+          resources:
+            {{- toYaml .Values.gateway.resources | nindent 12 }}
+          volumeMounts:
+          - name: conf
+            mountPath: /etc/agola
+          - name: local
+            mountPath: {{ .Values.config.localBaseDir }}
+      {{- with .Values.gateway.extraContainers }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.gateway.initContainers }}
+      initContainers:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.gateway.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.gateway.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.gateway.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.gateway.dnsConfig }}
+      dnsConfig:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      volumes:
+        - name: conf
+          secret:
+            secretName: {{ include "agola.fullname" . }}-conf
+        - name: local
+          emptyDir: {}
+      {{- with .Values.gateway.extraVolumes }}
+      {{- toYaml . | nindent 8 }}
+      {{- end }}

@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "agola.fullname" . }}-gateway
+  labels:
+    {{- include "agola.labels" . | nindent 4 }}
+    agola.io/component: gateway
+spec:
+  type: ClusterIP
+  ports:
+    - protocol: TCP
+      name: gateway
+      port: {{ .Values.gateway.service.port }}
+      targetPort: 8000
+  selector:
+    {{- include "agola.selectorLabels" . | nindent 4 }}
+    agola.io/component: gateway
