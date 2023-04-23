@@ -1,6 +1,6 @@
 # agola
 
-![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.7.0](https://img.shields.io/badge/AppVersion-v0.7.0-informational?style=flat-square)
+![Version: 0.2.0](https://img.shields.io/badge/Version-0.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.7.0](https://img.shields.io/badge/AppVersion-v0.7.0-informational?style=flat-square)
 
 A Helm chart for Agola
 
@@ -92,6 +92,9 @@ Kubernetes: `>=1.19.0-0`
 | gitserver.extraVolumes | list | `[]` | Gitserver extra volumes |
 | gitserver.initContainers | list | `[]` | Gitserver initContainers |
 | gitserver.nodeSelector | object | `{}` | Gitserver Node selector labels |
+| gitserver.persistence.enabled | bool | `false` | Gitserver persistence enabled |
+| gitserver.persistence.requestsStorage | string | `"1Gi"` | Gitserver persistence requests storage |
+| gitserver.persistence.storageClassName | string | `""` | Gitserver persistence storageClassName |
 | gitserver.podAnnotations | object | `{}` | Gitserver Pod annotations |
 | gitserver.podSecurityContext | object | `{}` | Gitserver Pod security context |
 | gitserver.resources | object | `{}` | Gitserver Resources |
