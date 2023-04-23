@@ -388,6 +388,13 @@ gitserver:
   updateStrategy:
     # -- The type of the update strategy for the statefulSet
     type: RollingUpdate
+  persistence:
+    # -- Gitserver persistence enabled
+    enabled: false
+    # -- Gitserver persistence storageClassName
+    storageClassName: ""
+    # -- Gitserver persistence requests storage
+    requestsStorage: 1Gi
   # -- Gitserver extra containers.
   extraContainers: []
   # -- Gitserver initContainers

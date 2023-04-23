@@ -93,8 +93,27 @@ spec:
         - name: conf
           secret:
             secretName: {{ include "agola.fullname" . }}-conf
+        {{- if not .Values.gitserver.persistence.enabled }}
         - name: local
           emptyDir: {}
+        {{- end }}
       {{- with .Values.gitserver.extraVolumes }}
       {{- toYaml . | nindent 8 }}
       {{- end }}
+  {{- if .Values.gitserver.persistence.enabled }}
+  volumeClaimTemplates:
+  - metadata:
+      name: local
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      {{- if .Values.gitserver.persistence.storageClassName }}
+      {{- if (eq "-" .Values.gitserver.persistence.storageClassName) }}
+      storageClassName: ""
+      {{- else }}
+      storageClassName: {{ .Values.gitserver.persistence.storageClassName }}
+      {{- end }}
+      {{- end }}
+      resources:
+        requests:
+          storage: {{ .Values.gitserver.persistence.requestsStorage }}
+  {{- end }}
