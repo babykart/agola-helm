@@ -1,0 +1,36 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "agola.fullname" . }}-runservice-migrate-db
+  labels:
+    {{- include "agola.labels" . | nindent 4 }}
+    agola.io/component: runservice
+  annotations:
+    helm.sh/hook: post-upgrade
+    helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
+spec:
+  template:
+    metadata:
+      name: {{ include "agola.fullname" . }}-runservice-migrate-db
+      labels:
+        {{- include "agola.labels" . | nindent 8 }}
+        agola.io/component: runservice
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: runservice-migrate-db
+          image: "{{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          command:
+            - /bin/agola
+            - migrate
+            - "--config"
+            - /etc/agola/config.yml
+            - "--service"
+            - runservice
+          volumeMounts:
+          - name: conf
+            mountPath: /etc/agola
+      volumes:
+        - name: conf
+          secret:
+            secretName: {{ include "agola.fullname" . }}-conf
