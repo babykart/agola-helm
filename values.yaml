@@ -109,6 +109,8 @@ serviceAccount:
   # -- The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
   name: ""
+  # -- Creates the token object
+  token: false
   rbac:
     # -- Only change this if you have a non CNCF compliant cluster, missing the RBAC endpoints
     # the Role and RoleBinding are only created if serviceAccount.create is also true
