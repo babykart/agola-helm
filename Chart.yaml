@@ -2,7 +2,7 @@ apiVersion: v2
 name: agola
 description: A Helm chart for Agola
 type: application
-version: 0.4.0
+version: 0.5.0
 appVersion: "v0.8.0"
 kubeVersion: ">=1.19.0-0"
 home: https://agola.io/
