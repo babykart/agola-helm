@@ -54,7 +54,7 @@ config:
         connString: "postgres://agola:password@postgres:5432/configstore?sslmode=disable"
       objectStorage:
         type: s3
-        endpoint: "http://minio-service:9000"
+        endpoint: "http://agola-minio-svc:9000"
         bucket: configstore
         location: us-east-1
         accessKey: minio
@@ -69,7 +69,7 @@ config:
         connString: "postgres://agola:password@postgres:5432/runservice?sslmode=disable"
       objectStorage:
         type: s3
-        endpoint: "http://minio-service:9000"
+        endpoint: "http://agola-minio-service:9000"
         bucket: runservice
         location: us-east-1
         accessKey: minio
@@ -440,3 +440,8 @@ gitserver:
   affinity: {}
   # -- Gitserver Overrides default DNS config
   dnsConfig: {}
+
+minio:
+  enabled: true
+  rootUser: minio
+  rootPassword: minio123 
