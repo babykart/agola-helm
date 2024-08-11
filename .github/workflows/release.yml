@@ -31,7 +31,7 @@ jobs:
 
       - name: Login to GHCR
         run: |
-          echo "$GITHUB_TOKEN" | helm registry login ghcr.io --insecure --username "$GITHUB_ACTOR" --password-stdin
+          echo "$GHCR_OCI_TOKEN" | helm registry login ghcr.io --insecure --username "$GITHUB_ACTOR" --password-stdin
 
       - name: Push charts to GHCR
         run: |
