@@ -1,3 +1,7 @@
+# agola-helm
+
+[![License](https://img.shields.io/badge/License-MIT-blue)](https://opensource.org/licenses/MIT)
+
 ## Usage
 
 [Helm](https://helm.sh) must be installed to use the charts. Please refer to
@@ -17,6 +21,12 @@ To install the agola chart:
 
 ```sh
 helm install agola agola-helm/agola
+```
+
+Using an OCI-based registry:
+
+```sh
+helm upgrade --install oci://ghcr.io/babykart/helm-charts/agola --version <version>
 ```
 
 To uninstall the chart:
