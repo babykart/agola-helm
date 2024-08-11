@@ -30,8 +30,10 @@ jobs:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 
       - name: Login to GHCR
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
         run: |
-          echo "$GHCR_OCI_TOKEN" | helm registry login ghcr.io --insecure --username "$GITHUB_ACTOR" --password-stdin
+          echo "$GITHUB_TOKEN" | helm registry login ghcr.io --username "$GITHUB_ACTOR" --password-stdin
 
       - name: Push charts to GHCR
         run: |
