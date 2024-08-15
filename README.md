@@ -1,7 +1,7 @@
 # agola-helm
 
-[![License](https://img.shields.io/badge/License-MIT-blue)](https://opensource.org/licenses/MIT)
 [![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/agola)](https://artifacthub.io/packages/search?repo=agola)
+[![License](https://img.shields.io/badge/License-MIT-blue)](https://opensource.org/licenses/MIT)
 
 ## Usage
 
@@ -27,7 +27,7 @@ helm install agola agola-helm/agola
 Using an OCI-based registry:
 
 ```sh
-helm upgrade --install oci://ghcr.io/babykart/helm-charts/agola --version <version>
+helm upgrade --install agola oci://ghcr.io/babykart/helm-charts/agola --version <version>
 ```
 
 To uninstall the chart:
