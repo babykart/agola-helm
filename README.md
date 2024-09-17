@@ -27,7 +27,7 @@ helm upgrade --install agola agola-helm/agola
 Using an OCI-based registry:
 
 ```sh
-helm upgrade --install agola oci://ghcr.io/babykart/helm-charts/agola --version <version>
+helm upgrade --install agola oci://ghcr.io/babykart/helm-charts/agola
  ```
 
 To uninstall the chart:
