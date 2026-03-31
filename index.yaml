@@ -3,6 +3,39 @@ entries:
   agola:
   - apiVersion: v2
     appVersion: v0.11.0
+    created: "2026-03-31T13:01:21.067959598Z"
+    description: A Helm chart for Agola
+    digest: deccb84a94a34d04a62277a7c375085f798eff2927ce29ef06f931a8b2d3160e
+    home: https://agola.io/
+    icon: https://avatars.githubusercontent.com/u/50148927?s=200&v=4
+    keywords:
+    - ci-cd
+    - continuous-delivery
+    - continuous-deployment
+    - continuous-integration
+    - distributed
+    - docker
+    - git
+    - gitea
+    - gitlab
+    - github
+    - golang
+    - kubernetes
+    kubeVersion: '>=1.19.0-0'
+    maintainers:
+    - email: babykart@gmail.com
+      name: babykart
+      url: https://github.com/babykart
+    name: agola
+    sources:
+    - https://github.com/agola-io/agola.git
+    - https://github.com/agola-io/agola-web.git
+    type: application
+    urls:
+    - https://github.com/babykart/agola-helm/releases/download/agola-0.8.0/agola-0.8.0.tgz
+    version: 0.8.0
+  - apiVersion: v2
+    appVersion: v0.11.0
     created: "2025-09-28T13:37:45.627723674Z"
     description: A Helm chart for Agola
     digest: 23eed399525a8f9f4ab3a6d3f93a8996e79fbed8189ec487f20d56bd12c64530
@@ -100,4 +133,4 @@ entries:
     urls:
     - https://github.com/babykart/agola-helm/releases/download/agola-0.6.1/agola-0.6.1.tgz
     version: 0.6.1
-generated: "2025-09-28T13:37:45.627739835Z"
+generated: "2026-03-31T13:01:21.06797704Z"
