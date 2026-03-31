@@ -1,0 +1,941 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "properties": {
+        "config": {
+            "type": "object",
+            "properties": {
+                "annotations": {
+                    "description": "Config annotations",
+                    "type": "object"
+                },
+                "apiExposedURL": {
+                    "description": "Config API Exposed URL",
+                    "type": "string"
+                },
+                "file": {
+                    "description": "Content of the config.yml file that will be stored in a secret",
+                    "type": "object",
+                    "properties": {
+                        "configstore": {
+                            "type": "object",
+                            "properties": {
+                                "dataDir": {
+                                    "type": "string"
+                                },
+                                "db": {
+                                    "type": "object",
+                                    "properties": {
+                                        "connString": {
+                                            "type": "string"
+                                        },
+                                        "type": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "objectStorage": {
+                                    "type": "object",
+                                    "properties": {
+                                        "accessKey": {
+                                            "type": "string"
+                                        },
+                                        "bucket": {
+                                            "type": "string"
+                                        },
+                                        "endpoint": {
+                                            "type": "string"
+                                        },
+                                        "location": {
+                                            "type": "string"
+                                        },
+                                        "secretAccessKey": {
+                                            "type": "string"
+                                        },
+                                        "type": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "web": {
+                                    "type": "object",
+                                    "properties": {
+                                        "listenAddress": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "executor": {
+                            "type": "object",
+                            "properties": {
+                                "activeTasksLimit": {
+                                    "type": "integer"
+                                },
+                                "allowPrivilegedContainers": {
+                                    "type": "boolean"
+                                },
+                                "dataDir": {
+                                    "type": "string"
+                                },
+                                "driver": {
+                                    "type": "object",
+                                    "properties": {
+                                        "type": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "initImage": {
+                                    "type": "object",
+                                    "properties": {
+                                        "image": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "runserviceURL": {
+                                    "type": "string"
+                                },
+                                "toolboxPath": {
+                                    "type": "string"
+                                },
+                                "web": {
+                                    "type": "object",
+                                    "properties": {
+                                        "listenAddress": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "gateway": {
+                            "type": "object",
+                            "properties": {
+                                "adminToken": {
+                                    "type": "string"
+                                },
+                                "apiExposedURL": {},
+                                "configstoreURL": {
+                                    "type": "string"
+                                },
+                                "cookieSigning": {
+                                    "type": "object",
+                                    "properties": {
+                                        "key": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "gitserverURL": {
+                                    "type": "string"
+                                },
+                                "runserviceURL": {
+                                    "type": "string"
+                                },
+                                "tokenSigning": {
+                                    "type": "object",
+                                    "properties": {
+                                        "key": {
+                                            "type": "string"
+                                        },
+                                        "method": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "unsecureCookies": {
+                                    "type": "boolean"
+                                },
+                                "web": {
+                                    "type": "object",
+                                    "properties": {
+                                        "listenAddress": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "webExposedURL": {}
+                            }
+                        },
+                        "gitserver": {
+                            "type": "object",
+                            "properties": {
+                                "dataDir": {
+                                    "type": "string"
+                                },
+                                "gatewayURL": {
+                                    "type": "string"
+                                },
+                                "web": {
+                                    "type": "object",
+                                    "properties": {
+                                        "listenAddress": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "notification": {
+                            "type": "object",
+                            "properties": {
+                                "configstoreURL": {
+                                    "type": "string"
+                                },
+                                "db": {
+                                    "type": "object",
+                                    "properties": {
+                                        "connString": {
+                                            "type": "string"
+                                        },
+                                        "type": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "runserviceURL": {
+                                    "type": "string"
+                                },
+                                "webExposedURL": {}
+                            }
+                        },
+                        "runservice": {
+                            "type": "object",
+                            "properties": {
+                                "dataDir": {
+                                    "type": "string"
+                                },
+                                "db": {
+                                    "type": "object",
+                                    "properties": {
+                                        "connString": {
+                                            "type": "string"
+                                        },
+                                        "type": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "debug": {
+                                    "type": "boolean"
+                                },
+                                "objectStorage": {
+                                    "type": "object",
+                                    "properties": {
+                                        "accessKey": {
+                                            "type": "string"
+                                        },
+                                        "bucket": {
+                                            "type": "string"
+                                        },
+                                        "endpoint": {
+                                            "type": "string"
+                                        },
+                                        "location": {
+                                            "type": "string"
+                                        },
+                                        "secretAccessKey": {
+                                            "type": "string"
+                                        },
+                                        "type": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "web": {
+                                    "type": "object",
+                                    "properties": {
+                                        "listenAddress": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "scheduler": {
+                            "type": "object",
+                            "properties": {
+                                "runserviceURL": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                },
+                "labels": {
+                    "description": "Config labels",
+                    "type": "object"
+                },
+                "localBaseDir": {
+                    "description": "Config local base directory",
+                    "type": "string"
+                },
+                "webExposedURL": {
+                    "description": "Config Web Exposed URL",
+                    "type": "string"
+                }
+            }
+        },
+        "configstore": {
+            "type": "object",
+            "properties": {
+                "affinity": {
+                    "description": "Configstore Affinity",
+                    "type": "object"
+                },
+                "deployment": {
+                    "type": "object",
+                    "properties": {
+                        "annotations": {
+                            "description": "Configstore Annotations for the deployment",
+                            "type": "object"
+                        },
+                        "labels": {
+                            "description": "Configstore Labels for the deployment",
+                            "type": "object"
+                        },
+                        "replicas": {
+                            "description": "Configstore number of replicas for the replicaSet",
+                            "type": "integer"
+                        },
+                        "revisionHistoryLimit": {
+                            "description": "The maximum number of revisions that will be maintained in the replicaSet's revision history. Default is 10.",
+                            "type": "integer"
+                        }
+                    }
+                },
+                "dnsConfig": {
+                    "description": "Configstore Overrides default DNS config",
+                    "type": "object"
+                },
+                "extraContainers": {
+                    "description": "Configstore extra containers.",
+                    "type": "array"
+                },
+                "extraVolumes": {
+                    "description": "Configstore extra volumes",
+                    "type": "array"
+                },
+                "initContainers": {
+                    "description": "Configstore initContainers",
+                    "type": "array"
+                },
+                "nodeSelector": {
+                    "description": "Configstore Node selector labels",
+                    "type": "object"
+                },
+                "podAnnotations": {
+                    "description": "Configstore Pod annotations",
+                    "type": "object"
+                },
+                "podSecurityContext": {
+                    "description": "Configstore Pod security context",
+                    "type": "object"
+                },
+                "resources": {
+                    "description": "Configstore Resources",
+                    "type": "object"
+                },
+                "securityContext": {
+                    "description": "Configstore Security context",
+                    "type": "object"
+                },
+                "service": {
+                    "type": "object",
+                    "properties": {
+                        "port": {
+                            "description": "The port of the service",
+                            "type": "integer"
+                        },
+                        "type": {
+                            "description": "Configstore type of the service",
+                            "type": "string"
+                        }
+                    }
+                },
+                "tolerations": {
+                    "description": "Configstore Tolerations",
+                    "type": "array"
+                },
+                "updateStrategy": {
+                    "type": "object",
+                    "properties": {
+                        "type": {
+                            "description": "The type of the update strategy for the deployment",
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "executor": {
+            "type": "object",
+            "properties": {
+                "affinity": {
+                    "description": "Executor Affinity",
+                    "type": "object"
+                },
+                "deployment": {
+                    "type": "object",
+                    "properties": {
+                        "annotations": {
+                            "description": "Executor Annotations for the deployment",
+                            "type": "object"
+                        },
+                        "labels": {
+                            "description": "Executor Labels for the deployment",
+                            "type": "object"
+                        },
+                        "replicas": {
+                            "description": "Executor number of replicas for the replicaSet",
+                            "type": "integer"
+                        },
+                        "revisionHistoryLimit": {
+                            "description": "The maximum number of revisions that will be maintained in the replicaSet's revision history. Default is 10.",
+                            "type": "integer"
+                        }
+                    }
+                },
+                "dnsConfig": {
+                    "description": "Executor Overrides default DNS config",
+                    "type": "object"
+                },
+                "extraContainers": {
+                    "description": "Executor extra containers.",
+                    "type": "array"
+                },
+                "extraVolumes": {
+                    "description": "Executor extra volumes",
+                    "type": "array"
+                },
+                "initContainers": {
+                    "description": "Executor initContainers",
+                    "type": "array"
+                },
+                "nodeSelector": {
+                    "description": "Executor Node selector labels",
+                    "type": "object"
+                },
+                "podAnnotations": {
+                    "description": "Executor Pod annotations",
+                    "type": "object"
+                },
+                "podSecurityContext": {
+                    "description": "Executor Pod security context",
+                    "type": "object"
+                },
+                "resources": {
+                    "description": "Executor Resources",
+                    "type": "object"
+                },
+                "securityContext": {
+                    "description": "Executor Security context",
+                    "type": "object"
+                },
+                "service": {
+                    "type": "object",
+                    "properties": {
+                        "port": {
+                            "description": "The port of the service",
+                            "type": "integer"
+                        },
+                        "type": {
+                            "description": "Executor type of the service",
+                            "type": "string"
+                        }
+                    }
+                },
+                "tolerations": {
+                    "description": "Executor Tolerations",
+                    "type": "array"
+                },
+                "updateStrategy": {
+                    "type": "object",
+                    "properties": {
+                        "type": {
+                            "description": "The type of the update strategy for the deployment",
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "fullnameOverride": {
+            "description": "Overrides the full name of the helm chart",
+            "type": "string"
+        },
+        "gateway": {
+            "type": "object",
+            "properties": {
+                "affinity": {
+                    "description": "Gateway Affinity",
+                    "type": "object"
+                },
+                "deployment": {
+                    "type": "object",
+                    "properties": {
+                        "annotations": {
+                            "description": "Gateway Annotations for the deployment",
+                            "type": "object"
+                        },
+                        "labels": {
+                            "description": "Gateway Labels for the deployment",
+                            "type": "object"
+                        },
+                        "replicas": {
+                            "description": "Gateway number of replicas for the replicaSet",
+                            "type": "integer"
+                        },
+                        "revisionHistoryLimit": {
+                            "description": "The maximum number of revisions that will be maintained in the replicaSet's revision history. Default is 10.",
+                            "type": "integer"
+                        }
+                    }
+                },
+                "dnsConfig": {
+                    "description": "Gateway Overrides default DNS config",
+                    "type": "object"
+                },
+                "extraContainers": {
+                    "description": "Gateway extra containers.",
+                    "type": "array"
+                },
+                "extraVolumes": {
+                    "description": "Gateway extra volumes",
+                    "type": "array"
+                },
+                "initContainers": {
+                    "description": "Gateway initContainers",
+                    "type": "array"
+                },
+                "nodeSelector": {
+                    "description": "Gateway Node selector labels",
+                    "type": "object"
+                },
+                "podAnnotations": {
+                    "description": "Gateway Pod annotations",
+                    "type": "object"
+                },
+                "podSecurityContext": {
+                    "description": "Gateway Pod security context",
+                    "type": "object"
+                },
+                "resources": {
+                    "description": "Gateway Resources",
+                    "type": "object"
+                },
+                "securityContext": {
+                    "description": "Gateway Security context",
+                    "type": "object"
+                },
+                "service": {
+                    "type": "object",
+                    "properties": {
+                        "port": {
+                            "description": "The port of the service",
+                            "type": "integer"
+                        },
+                        "type": {
+                            "description": "Gateway type of the service",
+                            "type": "string"
+                        }
+                    }
+                },
+                "tolerations": {
+                    "description": "Gateway Tolerations",
+                    "type": "array"
+                },
+                "updateStrategy": {
+                    "type": "object",
+                    "properties": {
+                        "type": {
+                            "description": "The type of the update strategy for the deployment",
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "gitserver": {
+            "type": "object",
+            "properties": {
+                "affinity": {
+                    "description": "Gitserver Affinity",
+                    "type": "object"
+                },
+                "dnsConfig": {
+                    "description": "Gitserver Overrides default DNS config",
+                    "type": "object"
+                },
+                "extraContainers": {
+                    "description": "Gitserver extra containers.",
+                    "type": "array"
+                },
+                "extraVolumes": {
+                    "description": "Gitserver extra volumes",
+                    "type": "array"
+                },
+                "initContainers": {
+                    "description": "Gitserver initContainers",
+                    "type": "array"
+                },
+                "nodeSelector": {
+                    "description": "Gitserver Node selector labels",
+                    "type": "object"
+                },
+                "persistence": {
+                    "type": "object",
+                    "properties": {
+                        "enabled": {
+                            "description": "Gitserver persistence enabled",
+                            "type": "boolean"
+                        },
+                        "requestsStorage": {
+                            "description": "Gitserver persistence requests storage",
+                            "type": "string"
+                        },
+                        "storageClassName": {
+                            "description": "Gitserver persistence storageClassName",
+                            "type": "string"
+                        }
+                    }
+                },
+                "podAnnotations": {
+                    "description": "Gitserver Pod annotations",
+                    "type": "object"
+                },
+                "podSecurityContext": {
+                    "description": "Gitserver Pod security context",
+                    "type": "object"
+                },
+                "resources": {
+                    "description": "Gitserver Resources",
+                    "type": "object"
+                },
+                "securityContext": {
+                    "description": "Gitserver Security context",
+                    "type": "object"
+                },
+                "service": {
+                    "type": "object",
+                    "properties": {
+                        "port": {
+                            "description": "The port of the service",
+                            "type": "integer"
+                        },
+                        "type": {
+                            "description": "Gitserver type of the service",
+                            "type": "string"
+                        }
+                    }
+                },
+                "statefulSet": {
+                    "type": "object",
+                    "properties": {
+                        "annotations": {
+                            "description": "Gitserver Annotations for the statefulSet",
+                            "type": "object"
+                        },
+                        "labels": {
+                            "description": "Gitserver Labels for the statefulSet",
+                            "type": "object"
+                        },
+                        "revisionHistoryLimit": {
+                            "description": "The maximum number of revisions that will be maintained in the statefulSet's revision history. Default is 10.",
+                            "type": "integer"
+                        }
+                    }
+                },
+                "tolerations": {
+                    "description": "Gitserver Tolerations",
+                    "type": "array"
+                },
+                "updateStrategy": {
+                    "type": "object",
+                    "properties": {
+                        "type": {
+                            "description": "The type of the update strategy for the statefulSet",
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "httproute": {
+            "type": "object",
+            "properties": {
+                "annotations": {
+                    "description": "Additional HTTPRoute annotations",
+                    "type": "object"
+                },
+                "enabled": {
+                    "description": "Enable HTTPRoute resource (Gateway API)",
+                    "type": "boolean"
+                },
+                "hostnames": {
+                    "description": "List of hostnames for the HTTPRoute",
+                    "type": "array"
+                },
+                "labels": {
+                    "description": "Additional HTTPRoute labels",
+                    "type": "object"
+                },
+                "parentRefs": {
+                    "description": "Gateway API parentRefs for the HTTPRoute Must reference an existing Gateway",
+                    "type": "array"
+                },
+                "rules": {
+                    "description": "HTTPRoute rules configuration",
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "matches": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "path": {
+                                            "type": "object",
+                                            "properties": {
+                                                "type": {
+                                                    "type": "string"
+                                                },
+                                                "value": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "image": {
+            "type": "object",
+            "properties": {
+                "pullPolicy": {
+                    "description": "Overrides the image pull policy",
+                    "type": "string"
+                },
+                "registry": {
+                    "description": "Overrides the image registry",
+                    "type": "string"
+                },
+                "repository": {
+                    "description": "Overrides the image repository",
+                    "type": "string"
+                },
+                "tag": {
+                    "description": "Overrides the image tag whose default is the chart appVersion.",
+                    "type": "string"
+                }
+            }
+        },
+        "imagePullSecrets": {
+            "description": "Defines imagePullSecrets",
+            "type": "array"
+        },
+        "ingress": {
+            "type": "object",
+            "properties": {
+                "annotations": {
+                    "description": "Ingress annotations",
+                    "type": "null"
+                },
+                "enabled": {
+                    "description": "Ingress enabled",
+                    "type": "boolean"
+                },
+                "hosts": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "host": {
+                                "type": "string"
+                            },
+                            "paths": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "path": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "ingressClassName": {
+                    "description": "Defines which ingress controller will implement the resource",
+                    "type": "string"
+                },
+                "tls": {
+                    "type": "array"
+                }
+            }
+        },
+        "nameOverride": {
+            "description": "Overrides the name of the helm chart",
+            "type": "string"
+        },
+        "runservice": {
+            "type": "object",
+            "properties": {
+                "affinity": {
+                    "description": "Runservice Affinity",
+                    "type": "object"
+                },
+                "deployment": {
+                    "type": "object",
+                    "properties": {
+                        "annotations": {
+                            "description": "Runservice Annotations for the deployment",
+                            "type": "object"
+                        },
+                        "labels": {
+                            "description": "Runservice Labels for the deployment",
+                            "type": "object"
+                        },
+                        "replicas": {
+                            "description": "Runservice number of replicas for the replicaSet",
+                            "type": "integer"
+                        },
+                        "revisionHistoryLimit": {
+                            "description": "The maximum number of revisions that will be maintained in the replicaSet's revision history. Default is 10.",
+                            "type": "integer"
+                        }
+                    }
+                },
+                "dnsConfig": {
+                    "description": "Runservice Overrides default DNS config",
+                    "type": "object"
+                },
+                "extraContainers": {
+                    "description": "Runservice extra containers.",
+                    "type": "array"
+                },
+                "extraVolumes": {
+                    "description": "Runservice extra volumes",
+                    "type": "array"
+                },
+                "initContainers": {
+                    "description": "Runservice initContainers",
+                    "type": "array"
+                },
+                "nodeSelector": {
+                    "description": "Runservice Node selector labels",
+                    "type": "object"
+                },
+                "podAnnotations": {
+                    "description": "Runservice Pod annotations",
+                    "type": "object"
+                },
+                "podSecurityContext": {
+                    "description": "Runservice Pod security context",
+                    "type": "object"
+                },
+                "resources": {
+                    "description": "Runservice Resources",
+                    "type": "object"
+                },
+                "securityContext": {
+                    "description": "Runservice Security context",
+                    "type": "object"
+                },
+                "service": {
+                    "type": "object",
+                    "properties": {
+                        "port": {
+                            "description": "The port of the service",
+                            "type": "integer"
+                        },
+                        "type": {
+                            "description": "Runservice type of the service",
+                            "type": "string"
+                        }
+                    }
+                },
+                "tolerations": {
+                    "description": "Runservice Tolerations",
+                    "type": "array"
+                },
+                "updateStrategy": {
+                    "type": "object",
+                    "properties": {
+                        "type": {
+                            "description": "The type of the update strategy for the deployment",
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "serviceAccount": {
+            "type": "object",
+            "properties": {
+                "annotations": {
+                    "description": "Annotations to add to the service account",
+                    "type": "object"
+                },
+                "create": {
+                    "description": "Specifies whether a service account should be created",
+                    "type": "boolean"
+                },
+                "name": {
+                    "description": "The name of the service account to use. If not set and create is true, a name is generated using the fullname template",
+                    "type": "string"
+                },
+                "rbac": {
+                    "type": "object",
+                    "properties": {
+                        "create": {
+                            "description": "Only change this if you have a non CNCF compliant cluster, missing the RBAC endpoints the Role and RoleBinding are only created if serviceAccount.create is also true",
+                            "type": "boolean"
+                        },
+                        "role": {
+                            "description": "additional annotations and labels in role and roleBinding are only needed, if you are using additional tooling to manage / verify roles or roleBindings (OPA, etc.)",
+                            "type": "object",
+                            "properties": {
+                                "annotations": {
+                                    "description": "Annotations for the RBAC role",
+                                    "type": "object"
+                                },
+                                "labels": {
+                                    "description": "Labels for the RBAC role",
+                                    "type": "object"
+                                }
+                            }
+                        },
+                        "roleBinding": {
+                            "type": "object",
+                            "properties": {
+                                "annotations": {
+                                    "description": "Annotations for the RBAC roleBinding",
+                                    "type": "object"
+                                },
+                                "labels": {
+                                    "description": "Labels for the RBAC roleBinding",
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "token": {
+                    "description": "Creates the token object",
+                    "type": "boolean"
+                }
+            }
+        }
+    }
+}
