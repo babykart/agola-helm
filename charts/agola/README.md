@@ -1,6 +1,6 @@
 # agola
 
-![Version: 0.7.0](https://img.shields.io/badge/Version-0.7.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.11.0](https://img.shields.io/badge/AppVersion-v0.11.0-informational?style=flat-square)
+![Version: 0.8.0](https://img.shields.io/badge/Version-0.8.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.11.0](https://img.shields.io/badge/AppVersion-v0.11.0-informational?style=flat-square)
 
 A Helm chart for Agola
 
@@ -139,6 +139,12 @@ Kubernetes: `>=1.19.0-0`
 | gitserver.statefulSet.revisionHistoryLimit | int | `5` | The maximum number of revisions that will be maintained in the statefulSet's revision history. Default is 10. |
 | gitserver.tolerations | list | `[]` | Gitserver Tolerations |
 | gitserver.updateStrategy.type | string | `"RollingUpdate"` | The type of the update strategy for the statefulSet |
+| httproute.annotations | object | `{}` | Additional HTTPRoute annotations |
+| httproute.enabled | bool | `false` | Enable HTTPRoute resource (Gateway API) |
+| httproute.hostnames | list | `[]` (See [values.yaml]) | List of hostnames for the HTTPRoute |
+| httproute.labels | object | `{}` | Additional HTTPRoute labels |
+| httproute.parentRefs | list | `[]` (See [values.yaml]) | Gateway API parentRefs for the HTTPRoute Must reference an existing Gateway |
+| httproute.rules | list | `[]` (See [values.yaml]) | HTTPRoute rules configuration |
 | image.pullPolicy | string | `"IfNotPresent"` | Overrides the image pull policy |
 | image.registry | string | `"docker.io"` | Overrides the image registry |
 | image.repository | string | `"sorintlab/agola"` | Overrides the image repository |
